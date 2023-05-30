@@ -17,7 +17,7 @@ class BoardView extends StatefulWidget {
 }
 
 class _BoardViewState extends State<BoardView> {
-  Piece currentPiece = Piece(type: Tetromino.L);
+  Piece currentPiece = Piece(type: Tetromino.S);
 
   @override
   void initState() {
@@ -27,7 +27,7 @@ class _BoardViewState extends State<BoardView> {
 
   void startGame() {
     currentPiece.initializePiece();
-    Duration frameRate = const Duration(milliseconds: 200);
+    Duration frameRate = const Duration(milliseconds: 800);
     gameLoop(frameRate);
   }
 
@@ -105,7 +105,7 @@ class _BoardViewState extends State<BoardView> {
   void rotatePiece() {
     if (!checkCollision(Direction.left)) {
       setState(() {
-        currentPiece.rotatePiece( );
+        currentPiece.rotatePiece();
       });
     }
   }
