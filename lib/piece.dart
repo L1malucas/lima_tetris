@@ -60,4 +60,61 @@ class Piece {
       default:
     }
   }
+
+  int rotationState = 1;
+  void rotatePiece() {
+    List<int> newPosition = [];
+    switch (type) {
+      case Tetromino.L:
+        switch (rotationState) {
+          case 0:
+            newPosition = [
+              position[1] - rowLength,
+              position[1],
+              position[1] + rowLength,
+              position[1] + rowLength + 1,
+            ];
+            position = newPosition;
+            rotationState = (rotationState + 1) % 4;
+            break;
+          case 1:
+            newPosition = [
+              position[1] - 1,
+              position[1],
+              position[1] + 1,
+              position[1] + rowLength - 1,
+            ];
+            position = newPosition;
+            rotationState = (rotationState + 1) % 4;
+            break;
+          case 2:
+            newPosition = [
+              position[1] + rowLength,
+              position[1],
+              position[1] - rowLength,
+              position[1] - rowLength - 1,
+            ];
+            position = newPosition;
+            rotationState = (rotationState + 1) % 4;
+            break;
+          case 3:
+            newPosition = [
+              position[1] - rowLength + 1,
+              position[1],
+              position[1] + 1,
+              position[1] - 1,
+            ];
+            position = newPosition;
+            rotationState = (rotationState + 1) % 4;
+            break;
+        }
+        break;
+      default:
+    }
+  }
+
+  // bool positionIsValid(int position) {
+  //   int row = (position / rowLength).floor();
+  //   int col = position % rowLength;
+  // }
 }

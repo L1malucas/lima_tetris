@@ -86,9 +86,29 @@ class _BoardViewState extends State<BoardView> {
     currentPiece.initializePiece();
   }
 
-  void moveLeft() {}
-  void moveRight() {}
-  void rotatePiece() {}
+  void moveLeft() {
+    if (!checkCollision(Direction.left)) {
+      setState(() {
+        currentPiece.movePiece(Direction.left);
+      });
+    }
+  }
+
+  void moveRight() {
+    if (!checkCollision(Direction.right)) {
+      setState(() {
+        currentPiece.movePiece(Direction.right);
+      });
+    }
+  }
+
+  void rotatePiece() {
+    if (!checkCollision(Direction.left)) {
+      setState(() {
+        currentPiece.rotatePiece( );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,13 +156,13 @@ class _BoardViewState extends State<BoardView> {
                   icon: const Icon(Icons.arrow_back_ios_new_outlined),
                 ),
                 IconButton(
+                  onPressed: rotatePiece,
                   color: Colors.white,
-                  onPressed: moveRight,
                   icon: const Icon(Icons.rotate_right),
                 ),
                 IconButton(
                   color: Colors.white,
-                  onPressed: rotatePiece,
+                  onPressed: moveRight,
                   icon: const Icon(Icons.arrow_forward_ios_outlined),
                 )
               ],
