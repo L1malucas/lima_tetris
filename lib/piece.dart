@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:lima_tetris/values.dart';
 
 class Piece {
@@ -6,6 +8,10 @@ class Piece {
   Piece({required this.type});
 
   List<int> position = [];
+
+  Color get color {
+    return tetrominoColors[type] ?? const Color(0xFFFFFFFF);
+  }
 
   void initializePiece() {
     switch (type) {
@@ -16,16 +22,16 @@ class Piece {
         position = [-15, -16, -5, -6];
         break;
       case Tetromino.J:
-        position = [-25, -14, -5, -6];
+        position = [-25, -15, -5, -6];
         break;
       case Tetromino.L:
-        position = [-16, -16, -6, -5];
+        position = [-26, -16, -6, -5];
         break;
       case Tetromino.S:
         position = [-15, -14, -6, -5];
         break;
       case Tetromino.T:
-        position = [-26, -16, -6, -5];
+        position = [-26, -16, -6, -15];
         break;
       case Tetromino.Z:
         position = [-17, -16, -6, -5];
