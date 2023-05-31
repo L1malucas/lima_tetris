@@ -17,7 +17,9 @@ class BoardView extends StatefulWidget {
 }
 
 class _BoardViewState extends State<BoardView> {
-  Piece currentPiece = Piece(type: Tetromino.S);
+  Piece currentPiece = Piece(type: Tetromino.T);
+  int currentScore = 0;
+  bool gameOver = false;
 
   @override
   void initState() {
@@ -27,17 +29,47 @@ class _BoardViewState extends State<BoardView> {
 
   void startGame() {
     currentPiece.initializePiece();
-    Duration frameRate = const Duration(milliseconds: 800);
+    Duration frameRate = const Duration(milliseconds: 200);
     gameLoop(frameRate);
   }
 
   void gameLoop(Duration frameRate) {
     Timer.periodic(frameRate, (timer) {
       setState(() {
+        clearLines();
         checkLanding();
+        if (gameOver == true) {
+          timer.cancel();
+        }
         currentPiece.movePiece(Direction.down);
       });
     });
+  }
+
+  void showGameOverDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text("Game Over"),
+              content: Text("Your score is: $currentScore"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      resetGame();
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Play again"))
+              ],
+            ));
+  }
+
+  void resetGame() {
+    gameBoard =
+        List.generate(colLength, (i) => List.generate(rowLength, (j) => null));
+    gameOver = false;
+    currentScore = 0;
+    createNewPiece();
+    startGame();
   }
 
   bool checkCollision(Direction direction) {
@@ -84,6 +116,9 @@ class _BoardViewState extends State<BoardView> {
         Tetromino.values[rand.nextInt(Tetromino.values.length)];
     currentPiece = Piece(type: randomType);
     currentPiece.initializePiece();
+    if (isGameOver()) {
+      gameOver == true;
+    }
   }
 
   void moveLeft() {
@@ -110,6 +145,35 @@ class _BoardViewState extends State<BoardView> {
     }
   }
 
+  void clearLines() {
+    for (int row = colLength - 1; row >= 0; row--) {
+      bool rowIsFUll = true;
+
+      for (int col = 0; col < rowLength; col++) {
+        if (gameBoard[row][col] == null) {
+          rowIsFUll = false;
+          break;
+        }
+      }
+
+      if (rowIsFUll) {
+        for (int r = row; r > 0; r--) {
+          gameBoard[r] = List.from(gameBoard[r - 1]);
+        }
+        gameBoard[0] = List.generate(row, (index) => null);
+      }
+    }
+  }
+
+  bool isGameOver() {
+    for (int col = 0; col < rowLength; col++) {
+      if (gameBoard[0][col] != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,25 +192,26 @@ class _BoardViewState extends State<BoardView> {
                 if (currentPiece.position.contains(index)) {
                   return Pixel(
                     color: currentPiece.color,
-                    numbers: index.toString(),
                   );
                 } else if (gameBoard[row][col] != null) {
                   final Tetromino? tetrominoType = gameBoard[row][col];
                   return Pixel(
                     color: tetrominoColors[tetrominoType],
-                    numbers: index.toString(),
                   );
                 } else {
                   return Pixel(
                     color: Colors.grey,
-                    numbers: index.toString(),
                   );
                 }
               },
             ),
           ),
+          Text(
+            "Score: $currentScore",
+            style: const TextStyle(color: Colors.white),
+          ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 40.0),
+            padding: const EdgeInsets.only(bottom: 40.0, top: 40.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
