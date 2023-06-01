@@ -38,8 +38,10 @@ class _BoardViewState extends State<BoardView> {
       setState(() {
         clearLines();
         checkLanding();
+        print("gamover no game loop  $gameOver");
         if (gameOver == true) {
           timer.cancel();
+          showGameOverDialog();
         }
         currentPiece.movePiece(Direction.down);
       });
@@ -116,8 +118,11 @@ class _BoardViewState extends State<BoardView> {
         Tetromino.values[rand.nextInt(Tetromino.values.length)];
     currentPiece = Piece(type: randomType);
     currentPiece.initializePiece();
+    print("entrou na funçao createNewPiece");
     if (isGameOver()) {
-      gameOver == true;
+      print("ENTROU NO IF");
+      gameOver = true;
+      print("gamover $gameOver");
     }
   }
 
@@ -167,7 +172,9 @@ class _BoardViewState extends State<BoardView> {
 
   bool isGameOver() {
     for (int col = 0; col < rowLength; col++) {
+      print("entrou na funçao isGameOver");
       if (gameBoard[0][col] != null) {
+        print("ENTROU NO IF");
         return true;
       }
     }
